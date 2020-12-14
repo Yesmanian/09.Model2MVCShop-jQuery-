@@ -46,12 +46,17 @@ function resetData(){
 	document.detailForm.reset();
 }
 -->
+$(function(){
+	$('form').attr('method','POST').attr('enctype','multipart/form-data').submit();
+})
+
+
 </script>
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
-<form name="detailForm" method="post" enctype="multipart/form-data">
+<form name="detailForm">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>

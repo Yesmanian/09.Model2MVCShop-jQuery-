@@ -45,22 +45,64 @@
 <title>상품목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
 
 function fncGetUserList(currentPage) {
-	document.getElementById("currentPage").value = currentPage;
-   	document.detailForm.submit();		
+	var menu = $('#menu').text().trim()
+	$("#currentPage").val(currentPage);
+	$("form").attr("method" , "POST").attr("action" , "/product/listProduct?menu="+menu).submit();	
 }
+
+$(function(){
+	
+	$( "td.ct_btn01:contains('검색')" ).on("click" , function() {
+		//Debug..
+		//alert(  $( "td.ct_btn01:contains('검색')" ).html() );
+		fncGetUserList(1);
+	});
+	
+	
+	
+	$( ".ct_list_pop td:nth-child(3)" ).css("color" , "red");
+	$("h7").css("color" , "red");
+	
+	$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
+		//Debug..
+		//alert(  $( this ).text().trim() );
+		var prodNo = $(this).find('input[name="hiddenInfo1"]').val()
+		var proTranCode = $(this).find('input[name="hiddenInfo2"]').val()
+		var menu = $(this).find('input[name="hiddenInfo3"]').val()
+		self.location ="/product/getProduct?prodNo="+prodNo+"&menu="+menu+"&tranCode="+proTranCode;
+	});
+	$( '.ct_list_pop td:nth-child(9):contains("구매완료 ,배송하기")').on("click" , function() {
+		//Debug..
+		
+		alert("123")
+		var prodNo = $(this).find('input[name="hiddenInfo4"]').val()
+		self.location = "/purchase/updateTranCodeByProd?prodNo="+prodNo+"&tranCode=2";
+		//<a href="/purchase/updateTranCodeByProd?prodNo=${vo.prodNo }&tranCode=2">
+	});
+	 
+	
+})
 
 </script>
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
-<div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/product/listProduct?menu=${param.menu}" method="post">
+<div style="width:98%; margin-left:10px;">
+<div id="menu">${param.menu }</div>
+
+<form name="detailForm" >
+
+
+<%-- <div style="display:none;" name="prodNo" value="${vo.prodNo}"/>
+<div style="display:none;" name="menu" value="${param.menu }"/>
+<div style="display:none;"name="tranCode" value="${vo.proTranCode}"/> --%>
+
 
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
@@ -101,7 +143,7 @@ function fncGetUserList(currentPage) {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:fncGetUserList('1');">검색</a>
+						검색
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -143,8 +185,13 @@ function fncGetUserList(currentPage) {
 		<tr class="ct_list_pop">
 			<td align="center">${ i }</td>
 			<td></td>
-			<td align="left">
-				<a href="/product/getProduct?prodNo=${vo.prodNo }&menu=${param.menu }&tranCode=${vo.proTranCode}">${vo.prodName }</a></td>
+			<td align="left" id="prodName">
+				<input type="hidden" name="hiddenInfo1" value="${vo.prodNo}"/>
+				<input type="hidden" name="hiddenInfo2" value="${vo.proTranCode}"/>
+				<input type="hidden" name="hiddenInfo3" value="${param.menu}"/>
+				${vo.prodName }
+				<%-- ${param.menu }+"&tranCode="+${vo.proTranCode} --%>
+			</td>
 			
 			<td></td>
 			<td align="left">${vo.price }</td>
@@ -160,7 +207,8 @@ function fncGetUserList(currentPage) {
 							판매중
 						</c:when>
 						<c:when test="${vo.proTranCode == '1'}">
-							구매완료 ,<a href="/purchase/updateTranCodeByProd?prodNo=${vo.prodNo }&tranCode=2">배송하기</a>
+							<input type="hidden" name="hiddenInfo4" value="${vo.prodNo}"/>
+							구매완료 ,배송하기
 						</c:when>		
 						<c:when test="${vo.proTranCode == '2'}">
 							배송중

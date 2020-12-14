@@ -70,7 +70,7 @@ public class ProductController {
 		product.setManuDate(manuDate);
 		
 		for(MultipartFile multipartFile : multipartFiles) {
-			File targetFile = new File("C:\\Users\\doyeon\\git\\08.Model2MVCShop(RestFul Server)\\08.Model2MVCShop(RestFul Server)\\WebContent\\images\\uploadFiles"
+			File targetFile = new File("C:\\Users\\doyeon\\git\\09.Model2MVCShop(jQuery)\\09.Model2MVCShop(jQuery)\\WebContent\\images\\uploadFiles"
 							,multipartFile.getOriginalFilename());
 			multipartFile.transferTo(targetFile);
 			
@@ -125,7 +125,7 @@ public class ProductController {
 		List<String> picList = new ArrayList<String>();
 		for(String pic :  picArray) {
 			System.out.println(pic);
-			picList.add(pic);
+			picList.add(pic.trim());
 		}
 		System.out.println(picList);
 		
@@ -223,6 +223,18 @@ public class ProductController {
 		String[] splitManuData = originalManuDate.split("-");
 		String manuDate = String.join("", splitManuData);
 		product.setManuDate(manuDate);
+		
+		System.out.println(product.getFileName());
+		String fileName = product.getFileName();
+		int i = fileName.lastIndexOf('\\');
+		fileName = fileName.substring(i+1);
+		System.out.println(fileName);
+		product.setFileName(fileName);
+		
+		System.out.println("======"+product);
+		
+		
+		
 		
 		
 		System.out.println("======"+product);
